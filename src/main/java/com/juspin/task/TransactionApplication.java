@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 
 @MapperScan("com.juspin.task.repository.mapper")
-@EnableCaching
+//@EnableCaching
 @SpringBootApplication
 public class TransactionApplication {
 

@@ -1,26 +1,20 @@
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.ehcache.org/v3"
-        xmlns:jsr107="http://www.ehcache.org/v3/jsr107"
-        xsi:schemaLocation="
-            http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd
-            http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd"
+         updateCheck="true" monitoring="autodetect"
+         dynamicConfig="true">
 
-    <service>
-        <!--开启service注解-->
-        <jsr107:defaults enable-statistics="true"/>
-    </service>
-    <cache alias="TransactionCache">
-        <key-type>java.lang.String</key-type>
-        <value-type>com.juspin.task.entity.Transaction</value-type>
+    <diskStore path="java.io.tmpdir"/>
 
-        <expiry>
-            <!-- cache ttl，unit: seconds -->
-            <ttl unit="seconds">5</ttl>
-        </expiry>
-        <resources>
-            <!-- resource size -->
-            <heap unit="entries">50000</heap>
-            <offheap unit="MB">100</offheap>
-        </resources>
+    <cache name="TransactionCache"
+           maxEntriesLocalHeap="10000"
+           maxEntriesLocalDisk="1000"
+           eternal="false"
+           diskSpoolBufferSizeMB="30"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+        <persistence strategy="localTempSwap"/>
     </cache>
-</config>
+</ehcache>
