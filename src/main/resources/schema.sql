@@ -11,3 +11,8 @@ CREATE TABLE IF NOT EXISTS transactions (
     remark VARCHAR(255),
     updateTime BIGINT
 );
+CREATE INDEX idx_owner ON transactions(owner);
+CREATE INDEX idx_amount ON transactions(amount);
+CREATE INDEX idx_type ON transactions(type);
+CREATE INDEX idx_category ON transactions(category);
+CREATE INDEX idx_remark ON transactions(remark);

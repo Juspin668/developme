@@ -15,7 +15,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 
@@ -34,7 +33,7 @@ public class TransactionServiceTest {
         mockedTransaction.setId(1L);
         Mockito.when(transactionDao.selectById(mockedTransaction.getId())).thenReturn(mockedTransaction);
         Transaction result = transactionService.queryById(mockedTransaction.getId());
-        assertEquals(mockedTransaction, result);
+        Assert.assertEquals(mockedTransaction, result);
     }
 
     @Test
@@ -73,7 +72,7 @@ public class TransactionServiceTest {
         mockedTransaction.setFromAccount("testCount01");
         mockedTransaction.setToAccount("testCount02");
         Transaction createdTransaction = this.transactionService.create(mockedTransaction);
-        assertEquals(mockedTransaction, createdTransaction);
+        Assert.assertEquals(mockedTransaction, createdTransaction);
     }
 
     @Test

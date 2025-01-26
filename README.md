@@ -36,7 +36,6 @@ ENTRYPOINT ["java", "-jar", "transaction-management-system-1.0.1-SNAPSHOT.jar"]
 * 框架 Spring MVC + MyBatis
 * 参数校验：Spring Validate
 * 数据库：H2内存数据库
-* 缓存：EhCache
 * API设计：restful api
 * 代码层次：Controller、Service、Repository
 ```html
@@ -44,7 +43,7 @@ src/main/java/com/juspin/task/
     ├── advice/
     │   └── ControllerAdvice.java
     ├── config/
-    │   └── SwaggerConfig.java
+    │   └── WebConfig.java
     ├── controller/
     │   └── TransactionController.java
     ├── service/
@@ -58,12 +57,12 @@ src/main/java/com/juspin/task/
     └── TransactionApplication.java
 ```
 ### 关键设计
-* 全局统一返回结果封装；
-* 全局统一异常处理及异常日志打印；
+* 全局统一返回结果封装, 方便前台业务处理，统一规划返回状态码和提示信息，对扩展开放，方便业务定制；
+* 全局统一异常处理及异常日志打印，减少冗余代码开发，方便维护及问题定位；
 ![异常处理](src/main/resources/static/exception-log-print.PNG)
 * restful API设计+分层代码结构设计，设计符合开闭原则，可扩展、可维护性良好；
 * 充分的参数校验，确保不可信域数据输入的安全性；
-* 通过缓存加速查询，并通过代码设计保证数据一致性，避免脏读。
+* 通过数据库设计加速查询，提升接口性能。
 
 ### API 接口详情
 ### 创建交易
@@ -71,13 +70,13 @@ src/main/java/com/juspin/task/
 * 请求示例:
 ```json
 {
-  "owner": "juspin", //必传
-  "fromAccount": "mycount", //必传
-  "toAccount": "zhangsan", //必传
-  "amount": 3888, //必传
-  "type": "收入", //必传
-  "category": "存款", //可选
-  "remark": "转账给张三" //可选
+  "owner": "juspin", 
+  "fromAccount": "mycount", 
+  "toAccount": "zhangsan",
+  "amount": 3888,
+  "type": "收入",
+  "category": "存款", 
+  "remark": "转账给张三" 
 }
 ```
 ### 修改交易
@@ -119,6 +118,7 @@ src/main/java/com/juspin/task/
 ### 单元测试(Junit+Mockito 100%方法和行覆盖)
 ![UT](src/main/resources/static/UT-coverage.PNG)
 ### 功能测试
+* 服务启动时自动预置了测试数据，方便功能测试
 * case: 根据ID查询，存在记录
 ![query](src/main/resources/static/querybyId.PNG)
 * case: 根据ID查询，不存在记录
@@ -143,16 +143,27 @@ src/main/java/com/juspin/task/
 ![list](src/main/resources/static/page-last.PNG)
 * case: 参数校验失败
 ![param](src/main/resources/static/bad-param.PNG)
-### 集成测试
-* 长稳及压力测试
-时间关系，只简单模拟并发场景(100个线程在3内拉起)
+### 压力测试
+* 压力模型：默认用户并发（100）访问系统场景，持续增、删、改、分页查询，持续压测五分钟
+* 测试结果：接口成功率100%, 最大响应时间小于300ms, 最大吞吐1300 hits/s
+![stres](src/main/resources/static/threads.PNG)
 ![stres](src/main/resources/static/stresstest.PNG)
 ![stres](src/main/resources/static/testReport-01.PNG)
 ![stres](src/main/resources/static/testReport-02.PNG)
+![stres](src/main/resources/static/throughput.PNG)
+* 测试脚本及报告@see classpath:static/test.zip
 
 ## 总结
 * 本项目实现了简单的银行交易管理系统的核心功能；
+* restful API设计+分层代码结构，设计符合开闭原则，可扩展、可维护性良好；
+* 充分的参数校验，确保不可信域数据输入的安全性；
+* 全局统一异常处理+返回结果封装+请求日志打印，方便维护扩展和问题定位；
+* 通过数据库设计加速查询，提升接口性能；
+
+## 后续迭代方向
 * 时间关系，未进行前端设计开发，后续可持续迭代或集成swagger方便接口维护测试；
+* 增加用户安全认证及操作鉴权，及操作合理性参数校验；
+* 通过spring cache实现缓存设计，提升查询操作接口性能；
 * 当前数据存储于内存，后续可考虑使用Sqlite持久化到磁盘；
 * 当前未进行容器化改造，后续可迭代charts开发，通过helm打包部署到K8s集群运行。
   

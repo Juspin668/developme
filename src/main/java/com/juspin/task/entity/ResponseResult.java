@@ -76,7 +76,6 @@ public class ResponseResult<T> implements Serializable {
      * @return The final response.
      */
     public static Object ok(Object responseBody) {
-        System.out.println("zheng test ok");
         if (responseBody instanceof ResponseResult) {
             return responseBody;
         } else {
